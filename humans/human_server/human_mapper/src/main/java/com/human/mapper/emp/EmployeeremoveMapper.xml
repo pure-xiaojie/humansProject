@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.emp.EmployeeremoveMapper" >
+  <resultMap id="BaseResultMap" type="com.human.pojo.emp.Employeeremove" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="eid" property="eid" jdbcType="INTEGER" />
+    <result column="afterDepId" property="afterDepId" jdbcType="INTEGER" />
+    <result column="afterJobId" property="afterJobId" jdbcType="INTEGER" />
+    <result column="removeDate" property="removeDate" jdbcType="DATE" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, eid, afterDepId, afterJobId, removeDate, reason, remark
+  </sql>
+
+  <!-- 获取总数量 -->
+  <select id="getTotal" resultType="java.lang.Long">
+    select count(*) from employeeremove
+  </select>
+
+  <!-- 分页查询-->
+  <select id="getPageList" parameterType="java.lang.Integer" resultMap="detailResultMap">
+    SELECT er.*, e.`name`,e.workID,e.gender,d.id as did,d.`name` as dname,j.id as jid, j.`name` as jname
+    from employeeremove er, employee e, department d, joblevel j
+    WHERE er.eid = e.id and er.afterDepId = d.id and er.afterJobId = j.id
+    ORDER BY er.id
+    <if test="page != null and size != null">
+      limit #{page},#{size}
+    </if>
+  </select>
+  <resultMap id="detailResultMap" type="com.human.pojo.emp.Employeeremove" extends="BaseResultMap">
+    <association property="employee" javaType="com.human.pojo.emp.Employee">
+      <result column="name" property="name"></result>
+      <result column="gender" property="gender"></result>
+      <result column="workID" property="workID"></result>
+    </association>
+    <association property="department" javaType="com.human.pojo.Department">
+      <result column="did" property="id"></result>
+      <result column="dname" property="name"></result>
+    </association>
+    <association property="jobLevel" javaType="com.human.pojo.JobLevel">
+      <result column="jid" property="id"></result>
+      <result column="jname" property="name"></result>
+    </association>
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from employeeremove
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from employeeremove
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.human.pojo.emp.Employeeremove" >
+    insert into employeeremove (id, eid, afterDepId, 
+      afterJobId, removeDate, reason, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, #{afterDepId,jdbcType=INTEGER}, 
+      #{afterJobId,jdbcType=INTEGER}, #{removeDate,jdbcType=DATE}, #{reason,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.human.pojo.emp.Employeeremove" >
+    insert into employeeremove
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="afterDepId != null" >
+        afterDepId,
+      </if>
+      <if test="afterJobId != null" >
+        afterJobId,
+      </if>
+      <if test="removeDate != null" >
+        removeDate,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="afterDepId != null" >
+        #{afterDepId,jdbcType=INTEGER},
+      </if>
+      <if test="afterJobId != null" >
+        #{afterJobId,jdbcType=INTEGER},
+      </if>
+      <if test="removeDate != null" >
+        #{removeDate,jdbcType=DATE},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.human.pojo.emp.Employeeremove" >
+    update employeeremove
+    <set >
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="afterDepId != null" >
+        afterDepId = #{afterDepId,jdbcType=INTEGER},
+      </if>
+      <if test="afterJobId != null" >
+        afterJobId = #{afterJobId,jdbcType=INTEGER},
+      </if>
+      <if test="removeDate != null" >
+        removeDate = #{removeDate,jdbcType=DATE},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.human.pojo.emp.Employeeremove" >
+    update employeeremove
+    set eid = #{eid,jdbcType=INTEGER},
+      afterDepId = #{afterDepId,jdbcType=INTEGER},
+      afterJobId = #{afterJobId,jdbcType=INTEGER},
+      removeDate = #{removeDate,jdbcType=DATE},
+      reason = #{reason,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

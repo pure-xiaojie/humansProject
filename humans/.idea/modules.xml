@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/human_server/human_mapper/human_mapper.iml" filepath="$PROJECT_DIR$/human_server/human_mapper/human_mapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/human_server/human_pojo/human_pojo.iml" filepath="$PROJECT_DIR$/human_server/human_pojo/human_pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/human_server/human_server.iml" filepath="$PROJECT_DIR$/human_server/human_server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/human_server/human_service/human_service.iml" filepath="$PROJECT_DIR$/human_server/human_service/human_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/human_server/human_web/human_web.iml" filepath="$PROJECT_DIR$/human_server/human_web/human_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/humans.iml" filepath="$PROJECT_DIR$/humans.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail_server/mail_server.iml" filepath="$PROJECT_DIR$/mail_server/mail_server.iml" />
+    </modules>
+  </component>
+</project>

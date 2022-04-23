@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.statistics.RecruitmentMapper" >
+    <resultMap id="baseResult1" type="com.human.pojo.statistics.StatisticalVisit">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="visit" property="visit" jdbcType="INTEGER" />
+        <result column="resume" property="resume" jdbcType="INTEGER" />
+        <result column="absolutely" property="absolutely" jdbcType="DOUBLE" />
+    </resultMap>
+    <resultMap id="baseResult2" type="com.human.pojo.statistics.StatisticalKeyValue">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="count" property="value" jdbcType="INTEGER" />
+    </resultMap>
+    <!--简历投递时间分布-->
+    <select id="getResumeStatistical" resultMap="baseResult2">
+        select MONTH(r.createDate) as name,count(1) as count
+        from resume r
+        where YEAR(r.createDate) = 2021 
+        GROUP BY MONTH(r.createDate);
+    </select>
+    <!--薪资分布-->
+    <select id="getSalaryStatistical" resultMap="baseResult2">
+        SELECT r.p_salary as name, count(1) as count
+        FROM rec_position r
+        GROUP BY r.p_salary
+    </select>
+    <!--简历投递状态统计-->
+    <select id="getResumeStatusStatistical" resultMap="baseResult2">
+        SELECT r.`status` as name, count(1) as count
+        FROM resume r
+        GROUP BY r.`status`
+    </select>
+    <!--获取职位访问量与投递比率-->
+    <select id="getJobVisitStatistical" resultMap="baseResult1">
+        SELECT p.p_name as name, p.visit, count(r.id) as resume, count(r.id)/p.visit as absolutely
+        from rec_position p, resume r
+        WHERE p.id = r.positionId
+        GROUP BY p.p_name
+        ORDER BY p.visit desc
+        LIMIT 6
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.statistics.PersonnelMapper" >
+    <resultMap id="baseResult" type="com.human.pojo.statistics.StatisticalKeyValue">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="count" property="value" jdbcType="INTEGER" />
+    </resultMap>
+    <!--地区分布-->
+    <select id="getAreaStatistical" resultMap="baseResult">
+        SELECT e.nativePlace as name ,COUNT(e.nativePlace) as count
+        from employee e
+        GROUP BY e.nativePlace
+    </select>
+    <!--岗位分布-->
+    <select id="getPositionStatistical" resultMap="baseResult">
+        SELECT p.`name` as name, count(e.id) as count
+        from employee e, position p
+        WHERE e.posId = p.id
+        GROUP BY e.posId
+    </select>
+    <!--专业分布-->
+    <select id="getProfessionalStatistical" resultMap="baseResult">
+        SELECT e.specialty as name, count(*) as count
+        FROM employee e
+        GROUP BY e.specialty
+    </select>
+    <!--地区前10-->
+    <select id="getAreaTopStatistical" resultMap="baseResult">
+        SELECT e.nativePlace as name ,COUNT(e.nativePlace) as count
+        from employee e
+        GROUP BY e.nativePlace
+        ORDER BY count desc
+        LIMIT 10
+    </select>
+</mapper>

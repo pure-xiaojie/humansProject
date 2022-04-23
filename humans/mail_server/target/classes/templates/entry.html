@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>入职欢通知书</title>
+</head>
+<body style="margin: 0;padding: 0;">
+
+
+<table align="center" border="1" cellpadding="0" cellspacing="0" width="600px">
+    <tr>
+        <td>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"
+                   style="border-collapse: collapse;">
+                <tr>
+                    <td align="center" style="padding: 40px 0 30px 0;">
+                        入职通知书
+                    </td>
+                </tr>
+
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 0px 30px 20px 30px">
+                        <h4><span th:text="${name}"></span>，您好！</h4>
+
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <p>
+                                    诚挚的邀请您加入我们企业KK这个大家庭，岗位为<span th:text="${positionName}"></span>，希望您在这里可以实现并创造自己的价值，附件是我们企业KK发给您的Offer，请查收！保持联系！
+                                </p>
+                                <p>
+                                    以下对你的入职作补充
+                                </p>
+                                <p>
+                                入职时间：2021年7月1日（周一)
+                                </p>
+                                <p>
+                                项目地点：浙江省湖州市吴兴区红旗路湖州银行爱山支行2楼（龙庭东南门旁）。
+                                </p>
+                                <p>
+                                入职部门：<span th:text="${departmentName}"></span>
+                                </p>
+                                <p>
+                                </p>
+                                <p>
+                                （工作中有问题可以询问拍档，拍档会助你顺利入职并指导之后的工作）
+                                </p>
+                            </tr>
+
+                            <tr>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 20px 0px 10px 0px">
+                                            (系统邮件，请勿直接回复)
+                                        </td>
+                                    </tr>
+                                </table>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

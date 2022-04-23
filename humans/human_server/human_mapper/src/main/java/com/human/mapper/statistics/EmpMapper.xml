@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.statistics.EmpMapper" >
+    <resultMap id="baseResult" type="com.human.pojo.statistics.StatisticalKeyValue">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="count" property="value" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--入职年份统计-->
+    <select id="getEmpBeginDateStatistical" resultMap="baseResult">
+        select YEAR(e.beginDate) as name,count(1) as count
+        from employee e
+        GROUP BY YEAR(e.beginDate);
+    </select>
+
+    <!--专业统计-->
+    <select id="getEmpProfessionalStatistical" resultMap="baseResult">
+        select e.specialty as name, count(*) as count
+        FROM employee e
+        GROUP BY e.specialty
+    </select>
+
+    <!--性别统计-->
+    <select id="getEmpGenderStatistical" resultMap="baseResult">
+        SELECT e.gender as name, count(*) as count
+        FROM employee e
+        GROUP BY e.gender
+    </select>
+
+    <!--学历统计-->
+    <select id="getEmpEducationStatistical" resultMap="baseResult">
+        SELECT e.tiptopDegree as name, count(*) as count
+        FROM employee e
+        GROUP BY e.tiptopDegree
+    </select>
+
+    <!--政治面貌统计-->
+    <select id="getEmpPoliticsStatistical" resultMap="baseResult">
+        SELECT p.name, count(1) as count
+        FROM `politicsstatus` p, employee e
+        WHERE e.politicId = p.id
+        GROUP BY p.`name`;
+    </select>
+
+    <!--民族统计-->
+    <select id="getEmpNationStatistical" resultMap="baseResult">
+        SELECT n.name, count(1) as count
+        FROM nation n, employee e
+        WHERE e.nationId = n.id
+        GROUP BY n.`name`;
+    </select>
+</mapper>

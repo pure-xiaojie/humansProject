@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.salary.SalaryTableMapper" >
+    <resultMap id="BaseResultMap" type="com.human.pojo.salary.SalaryTable" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <id column="empId" property="empId" jdbcType="INTEGER" />
+        <result column="empName" property="empName" jdbcType="VARCHAR" />
+        <result column="month" property="month" jdbcType="INTEGER" />
+        <result column="basicSalary" property="basicSalary" jdbcType="INTEGER" />
+        <result column="bonus" property="bonus" jdbcType="INTEGER" />
+        <result column="lunchSalary" property="lunchSalary" jdbcType="INTEGER" />
+        <result column="trafficSalary" property="trafficSalary" jdbcType="INTEGER" />
+        <result column="allSalary" property="allSalary" jdbcType="INTEGER" />
+        <result column="actualSalary" property="actualSalary" jdbcType="REAL" />
+        <result column="pensionBase" property="pensionBase" jdbcType="INTEGER" />
+        <result column="pensionPer" property="pensionPer" jdbcType="REAL" />
+        <result column="medicalBase" property="medicalBase" jdbcType="INTEGER" />
+        <result column="medicalPer" property="medicalPer" jdbcType="REAL" />
+        <result column="accumulationFundBase" property="accumulationFundBase" jdbcType="INTEGER" />
+        <result column="accumulationFundPer" property="accumulationFundPer" jdbcType="REAL" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, empId, empName, month, basicSalary, bonus, lunchSalary,
+        trafficSalary, allSalary, actualSalary, pensionBase, pensionPer,
+        medicalBase, medicalPer, accumulationFundBase, accumulationFundPer
+    </sql>
+
+    <!--员工工资发放-->
+    <insert id="payEmpSalary" parameterType="com.human.pojo.salary.SalaryTable">
+        insert into salaryTable (<include refid="Base_Column_List"></include>)
+        values
+        <foreach collection ="salaryTables" item="table" separator =",">
+            (#{table.id}, #{table.empId}, #{table.empName},
+            #{table.month}, #{table.basicSalary}, #{table.bonus},
+            #{table.lunchSalary},#{table.trafficSalary}, #{table.allSalary},
+            #{table.actualSalary},#{table.pensionBase}, #{table.pensionPer},
+            #{table.medicalBase},#{table.medicalPer}, #{table.accumulationFundBase},
+            #{table.accumulationFundPer}
+           )
+        </foreach>
+    </insert>
+
+    <!--按月查询数量-->
+    <select id="getSalaryTableTotal" parameterType="java.lang.Integer" resultType="java.lang.Long">
+        select count(1) from salaryTable
+        <where>
+            <if test="month != null">
+                and month = #{month}
+            </if>
+        </where>
+    </select>
+
+    <!--按月份分页获取-->
+    <select id="getSalaryTablePageByMonth" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from salaryTable
+        <where>
+            <if test="month != null">
+                and month = #{month}
+            </if>
+        </where>
+        <if test="page != null and size != null">
+            limit #{page},#{size}
+        </if>
+    </select>
+
+    <!--员工根据id查询-->
+    <select id="getSalaryByEmpId" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from salaryTable
+        <where>
+            <if test="id != null">
+                and empId = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

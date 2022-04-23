@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.job.JobMapper" >
+    <resultMap id="baseResult" type="com.human.pojo.job.Job">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="hr_id" property="hr_id" jdbcType="INTEGER" />
+        <result column="p_name" property="p_name" jdbcType="VARCHAR" />
+        <result column="p_key" property="p_key" jdbcType="VARCHAR" />
+        <result column="p_salary" property="p_salary" jdbcType="VARCHAR" />
+        <result column="p_location" property="p_location" jdbcType="VARCHAR" />
+        <result column="p_languages" property="p_languages" jdbcType="VARCHAR" />
+        <result column="p_years" property="p_years" jdbcType="VARCHAR" />
+        <result column="p_tags" property="p_tags" jdbcType="VARCHAR" />
+        <result column="p_jobDetail" property="p_jobDetail" jdbcType="VARCHAR" />
+        <result column="p_jobContent" property="p_jobContent" jdbcType="VARCHAR" />
+        <result column="p_createDate" property="p_createDate" jdbcType="DATE" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="visit" property="visit" jdbcType="INTEGER" />
+        <association property="hr" javaType="com.human.pojo.Hr">
+            <result column="name" property="name"/>
+            <result column="phone" property="phone"/>
+            <result column="userface" property="userface"/>
+            <result column="enabled" property="enabled" jdbcType="BIT" />
+        </association>
+    </resultMap>
+    <!--查询职位数量-->
+    <select id="getJobTotal" resultType="java.lang.Long">
+        select count(*) from rec_position
+        <where>
+            <if test="job != null">
+                <if test="job.p_name != null and job.p_name != ''">
+                    and p_name like concat('%',#{job.p_name},'%')
+                </if>
+                <if test="job.p_location != null and job.p_location != ''">
+                    and p_location like concat('%',#{job.p_location},'%')
+                </if>
+                <if test="job.p_salary != null and job.p_salary != ''">
+                    and p_salary like concat('%',#{job.p_salary},'%')
+                </if>
+                <if test="job.p_languages != null and job.p_languages != ''">
+                    and p_languages like concat('%',#{job.p_languages},'%')
+                </if>
+                <if test="job.status != null and job.status != ''">
+                    and status = #{job.status}
+                </if>
+                <if test="job.sort != null and job.sort != ''">
+                    and sort = #{job.sort}
+                </if>
+            </if>
+            <if test="beginDateScope != null">
+                and p_createDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+            </if>
+        </where>
+    </select>
+
+    <!--根据id查询职位信息-->
+    <select id="getJobById" parameterType="java.lang.Integer" resultMap="baseResult">
+        select * from rec_position
+        where id = #{id}
+    </select>
+
+    <!--分页查询职位列表-->
+    <select id="getJobPageList" resultMap="baseResult">
+        SELECT h.name, h.phone, h.userface,h.enabled,p.*
+        FROM hr h, rec_position p
+        WHERE p.hr_id = h.id
+        <if test="job != null">
+            <if test="job.p_name != null and job.p_name != ''">
+                and p_name like concat('%',#{job.p_name},'%')
+            </if>
+            <if test="job.p_location != null and job.p_location != ''">
+                and p_location like concat('%',#{job.p_location},'%')
+            </if>
+            <if test="job.p_salary != null and job.p_salary != ''">
+                and p_salary like concat('%',#{job.p_salary},'%')
+            </if>
+            <if test="job.p_languages != null and job.p_languages != ''">
+                and p_languages like concat('%',#{job.p_languages},'%')
+            </if>
+            <if test="job.status != null and job.status != ''">
+                and status = #{job.status}
+            </if>
+            <if test="job.sort != null and job.sort != ''">
+                and sort = #{job.sort}
+            </if>
+        </if>
+        <if test="beginDateScope != null">
+            and p_createDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+        </if>
+        ORDER BY p.id
+        <if test="page != null and size != null">
+            limit #{page},#{size}
+        </if>
+    </select>
+
+    <!--添加招聘职位-->
+    <insert id="addJob" parameterType="com.human.pojo.job.Job"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into rec_position
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="hr_id != null" >
+                hr_id,
+            </if>
+            <if test="p_name != null" >
+                p_name,
+            </if>
+            <if test="p_key != null" >
+                p_key,
+            </if>
+            <if test="p_salary != null" >
+                p_salary,
+            </if>
+            <if test="p_location != null" >
+                p_location,
+            </if>
+            <if test="p_languages != null" >
+                p_languages,
+            </if>
+            <if test="p_years != null" >
+                p_years,
+            </if>
+            <if test="p_tags != null" >
+                p_tags,
+            </if>
+            <if test="p_jobDetail != null" >
+                p_jobDetail,
+            </if>
+            <if test="p_jobContent != null" >
+                p_jobContent,
+            </if>
+            <if test="p_createDate != null" >
+                p_createDate,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="sort != null" >
+                sort,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="hr_id != null" >
+                #{hr_id,jdbcType=INTEGER},
+            </if>
+            <if test="p_name != null" >
+                #{p_name,jdbcType=VARCHAR},
+            </if>
+            <if test="p_key != null" >
+                #{p_key,jdbcType=VARCHAR},
+            </if>
+            <if test="p_salary != null" >
+                #{p_salary,jdbcType=VARCHAR},
+            </if>
+            <if test="p_location != null" >
+                #{p_location,jdbcType=VARCHAR},
+            </if>
+            <if test="p_languages != null" >
+                #{p_languages,jdbcType=VARCHAR},
+            </if>
+            <if test="p_years != null" >
+                #{p_years,jdbcType=VARCHAR},
+            </if>
+            <if test="p_tags != null" >
+                #{p_tags,jdbcType=VARCHAR},
+            </if>
+            <if test="p_jobDetail != null" >
+                #{p_jobDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="p_jobContent != null" >
+                #{p_jobContent,jdbcType=VARCHAR},
+            </if>
+            <if test="p_createDate != null" >
+                #{p_createDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null" >
+                #{sort,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改招聘职位-->
+    <update id="updateJob" parameterType="com.human.pojo.job.Job">
+        update rec_position
+        <set>
+            <if test="hr_id != null" >
+                hr_id = #{hr_id,jdbcType=INTEGER},
+            </if>
+            <if test="p_name != null" >
+                p_name = #{p_name,jdbcType=VARCHAR},
+            </if>
+            <if test="p_key != null" >
+                p_key = #{p_key,jdbcType=VARCHAR},
+            </if>
+            <if test="p_salary != null" >
+                p_salary = #{p_salary,jdbcType=VARCHAR},
+            </if>
+            <if test="p_location != null" >
+                p_location = #{p_location,jdbcType=VARCHAR},
+            </if>
+            <if test="p_languages != null" >
+                p_languages = #{p_languages,jdbcType=VARCHAR},
+            </if>
+            <if test="p_years != null" >
+                p_years = #{p_years,jdbcType=VARCHAR},
+            </if>
+            <if test="p_tags != null" >
+                p_tags = #{p_tags,jdbcType=VARCHAR},
+            </if>
+            <if test="p_jobDetail != null" >
+                p_jobDetail = #{p_jobDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="p_jobContent != null" >
+                p_jobContent = #{p_jobContent,jdbcType=VARCHAR},
+            </if>
+            <if test="p_createDate != null" >
+                p_createDate = #{p_createDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null" >
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="visit != null" >
+                visit = visit+1,
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--删除招聘职位-->
+    <delete id="delJobById" parameterType="java.lang.Integer">
+        delete from rec_position
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+</mapper>

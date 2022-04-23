@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.emp.EmployeeecMapper" >
+  <resultMap id="BaseResultMap" type="com.human.pojo.emp.Employeeec" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="eid" property="eid" jdbcType="INTEGER" />
+    <result column="ecDate" property="ecDate" jdbcType="DATE" />
+    <result column="ecReason" property="ecReason" jdbcType="VARCHAR" />
+    <result column="ecPoint" property="ecPoint" jdbcType="INTEGER" />
+    <result column="ecType" property="ecType" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, eid, ecDate, ecReason, ecPoint, ecType, remark
+  </sql>
+
+  <!--查询总记录数-->
+  <select id="getTotal" resultType="java.lang.Long">
+    select count(*) from employeeec
+  </select>
+
+  <!--分页查询奖惩记录-->
+  <select id="selectByPageList" resultMap="detailResultMap" parameterType="java.lang.Integer">
+    SELECT eec.*,e.`name`,e.workID,e.gender,d.`name`  as dname,p.name as pname FROM
+    employeeec eec,employee e,department d,position p
+    WHERE eec.eid = e.id and e.departmentId = d.id and e.posId = p.id
+    order by id
+    <if test="page != null and size != null">
+      limit #{page},#{size}
+    </if>
+  </select>
+  <resultMap id="detailResultMap" type="com.human.pojo.emp.Employeeec" extends="BaseResultMap">
+    <association property="employee" javaType="com.human.pojo.emp.Employee">
+      <result column="name" property="name"></result>
+      <result column="gender" property="gender"></result>
+      <result column="workID" property="workID"></result>
+    </association>
+    <association property="department" javaType="com.human.pojo.Department">
+      <result column="dname" property="name"></result>
+    </association>
+    <association property="position" javaType="com.human.pojo.Position">
+      <result column="pname" property="name"></result>
+    </association>
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from employeeec
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from employeeec
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.human.pojo.emp.Employeeec" >
+    insert into employeeec (id, eid, ecDate, 
+      ecReason, ecPoint, ecType, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, #{ecDate,jdbcType=DATE}, 
+      #{ecReason,jdbcType=VARCHAR}, #{ecPoint,jdbcType=INTEGER}, #{ecType,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.human.pojo.emp.Employeeec" >
+    insert into employeeec
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="ecDate != null" >
+        ecDate,
+      </if>
+      <if test="ecReason != null" >
+        ecReason,
+      </if>
+      <if test="ecPoint != null" >
+        ecPoint,
+      </if>
+      <if test="ecType != null" >
+        ecType,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="ecDate != null" >
+        #{ecDate,jdbcType=DATE},
+      </if>
+      <if test="ecReason != null" >
+        #{ecReason,jdbcType=VARCHAR},
+      </if>
+      <if test="ecPoint != null" >
+        #{ecPoint,jdbcType=INTEGER},
+      </if>
+      <if test="ecType != null" >
+        #{ecType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.human.pojo.emp.Employeeec" >
+    update employeeec
+    <set >
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="ecDate != null" >
+        ecDate = #{ecDate,jdbcType=DATE},
+      </if>
+      <if test="ecReason != null" >
+        ecReason = #{ecReason,jdbcType=VARCHAR},
+      </if>
+      <if test="ecPoint != null" >
+        ecPoint = #{ecPoint,jdbcType=INTEGER},
+      </if>
+      <if test="ecType != null" >
+        ecType = #{ecType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.human.pojo.emp.Employeeec" >
+    update employeeec
+    set eid = #{eid,jdbcType=INTEGER},
+      ecDate = #{ecDate,jdbcType=DATE},
+      ecReason = #{ecReason,jdbcType=VARCHAR},
+      ecPoint = #{ecPoint,jdbcType=INTEGER},
+      ecType = #{ecType,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

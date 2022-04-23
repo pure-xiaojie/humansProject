@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>resume2</title>
+</head>
+<body style="margin: 0;padding: 0;">
+
+
+<table align="center" border="1" cellpadding="0" cellspacing="0" width="600px">
+    <tr>
+        <td>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"
+                   style="border-collapse: collapse;">
+                <tr>
+                    <td align="center" style="padding: 40px 0 30px 0;">
+                        笔试通知
+                    </td>
+                </tr>
+
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 0px 30px 20px 30px">
+                        <h4>亲爱的<span th:text="${name}"></span>同学，您好！</h4>
+
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <p>
+                                    非常感谢您投递了企业KK 的线上招聘， 您的简历已经通过初筛，现邀请您参加
+                                    <span th:text="${positionName}"></span>岗位的线上笔试。
+                                    （注：如果之前已参加过笔试，则无需重复作答，感谢~）
+                                </p>
+                                <p>
+                                    笔试时间：4月23日-4月26日，任选40分钟完成。
+                                    （越早做完，会越早被面试官看到哦！~）
+                                </p>
+                                <p>
+                                    笔试链接：https://ks.wjx.top/jq/97204131.aspx
+                                    （点进去，就开始倒计时了哦！请务必要做的时候再打开哈！）
+                                </p>
+                                <p>
+                                    <h4>【重要提示】</h4>
+                                </p>
+                                <p>1、笔试仅限同一设备（电脑或手机）一次答题机会，限同一IP地址只能作答一次；</p>
+                                <p>2、笔试期间仅有4次切屏机会，超过4次会自动交卷！60s无操作系统会自动提交答卷！</p>
+                                <p>3、答题默认【全屏】模式 ，退出全屏即为切屏，请勿按【ESC】键</p>
+                                <p>4、为避免出现弹窗被默认为切屏，请提前关闭QQ、微信等易弹出广告的软件噢</p>
+                                <p>祝笔试顺利~ 企业KK期待您的加入！</p>
+                            </tr>
+
+                            <tr>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 20px 0px 10px 0px">
+                                            (系统邮件，请勿直接回复)
+                                        </td>
+                                    </tr>
+                                </table>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

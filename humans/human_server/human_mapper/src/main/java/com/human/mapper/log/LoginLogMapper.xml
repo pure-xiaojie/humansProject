@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.log.LoginLogMapper" >
+    <resultMap id="baseResult" type="com.human.pojo.log.LoginLog">
+        <id property="id" column="id"/>
+        <result property="userName" column="userName"/>
+        <result property="status" column="status"/>
+        <result property="ip" column="ip"/>
+        <result property="location" column="location"/>
+        <result property="browser" column="browser"/>
+        <result property="os" column="os"/>
+        <result property="msg" column="msg"/>
+        <result property="createDate" column="createDate"/>
+    </resultMap>
+
+    <!--插入日志-->
+    <insert id="insertLoginLog" parameterType="com.human.pojo.log.LoginLog">
+        insert into loginLog (userName, status, ip, location, browser, os, msg, createDate)
+        values (#{userName}, #{status}, #{ip}, #{location}, #{browser}, #{os}, #{msg}, sysdate())
+    </insert>
+
+    <!--查询登录日志-->
+    <select id="selectLoginLogList" parameterType="com.human.pojo.log.LoginLog"
+            resultMap="baseResult">
+        select id, userName, ip, location, browser, os, status, msg, createDate
+        from loginLog
+        where 1 = 1
+        <if test="ip != null and ip != ''">
+            AND ip like concat('%', #{ip}, '%')
+        </if>
+        <if test="status != null ">
+            AND status = #{status}
+        </if>
+        <if test="userName != null and userName != ''">
+            AND userName like concat('%', #{userName}, '%')
+        </if>
+        order by createDate desc
+    </select>
+
+    <!--分页获取日志-->
+    <select id="selectLoginLogListByPage" resultMap="baseResult">
+        select id, userName, ip, location, browser, os, status, msg, createDate
+        from loginLog
+        where 1 = 1
+        <if test="userName != null and userName != ''">
+            and userName like concat('%', #{userName}, '%')
+        </if>
+        order by createDate desc
+        <if test="page != null and size != null">
+            limit #{page},#{size}
+        </if>
+    </select>
+
+    <!--根据id删除-->
+    <delete id="deleteLoginLogById" parameterType="java.lang.Integer">
+        delete from loginLog where id = #{id}
+    </delete>
+
+    <!--获取总日志数-->
+    <select id="getTotal" resultType="java.lang.Long">
+        select count(1) from loginLog
+        where 1 = 1
+        <if test="userName != null and userName != ''">
+            and userName like concat('%', #{userName}, '%')
+        </if>
+    </select>
+</mapper>

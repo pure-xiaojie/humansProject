@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.emp.EmployeetrainMapper" >
+  <resultMap id="BaseResultMap" type="com.human.pojo.emp.Employeetrain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="eid" property="eid" jdbcType="INTEGER" />
+    <result column="trainDate" property="trainDate" jdbcType="DATE" />
+    <result column="trainContent" property="trainContent" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, eid, trainDate, trainContent, remark
+  </sql>
+
+  <!--查询总记录数-->
+  <select id="getTotal" resultType="java.lang.Long">
+    select count(*) from employeetrain
+  </select>
+
+  <!--分页查询培训记录-->
+  <select id="selectByPageList" resultMap="detailResultMap" parameterType="java.lang.Integer">
+    SELECT et.*,e.`name`,e.workID,e.gender,d.`name`  as dname,p.name as pname FROM
+    employeetrain et,employee e,department d,position p
+    WHERE et.eid = e.id and e.departmentId = d.id and e.posId = p.id
+    order by id
+    <if test="page != null and size != null">
+      limit #{page},#{size}
+    </if>
+  </select>
+  <resultMap id="detailResultMap" type="com.human.pojo.emp.Employeetrain" extends="BaseResultMap">
+    <association property="employee" javaType="com.human.pojo.emp.Employee">
+      <result column="name" property="name"></result>
+      <result column="gender" property="gender"></result>
+      <result column="workID" property="workID"></result>
+    </association>
+    <association property="department" javaType="com.human.pojo.Department">
+      <result column="dname" property="name"></result>
+    </association>
+    <association property="position" javaType="com.human.pojo.Position">
+      <result column="pname" property="name"></result>
+    </association>
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from employeetrain
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from employeetrain
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.human.pojo.emp.Employeetrain" >
+    insert into employeetrain (id, eid, trainDate, 
+      trainContent, remark)
+    values (#{id,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, #{trainDate,jdbcType=DATE}, 
+      #{trainContent,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.human.pojo.emp.Employeetrain" >
+    insert into employeetrain
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="trainDate != null" >
+        trainDate,
+      </if>
+      <if test="trainContent != null" >
+        trainContent,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="trainDate != null" >
+        #{trainDate,jdbcType=DATE},
+      </if>
+      <if test="trainContent != null" >
+        #{trainContent,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.human.pojo.emp.Employeetrain" >
+    update employeetrain
+    <set >
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="trainDate != null" >
+        trainDate = #{trainDate,jdbcType=DATE},
+      </if>
+      <if test="trainContent != null" >
+        trainContent = #{trainContent,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.human.pojo.emp.Employeetrain" >
+    update employeetrain
+    set eid = #{eid,jdbcType=INTEGER},
+      trainDate = #{trainDate,jdbcType=DATE},
+      trainContent = #{trainContent,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

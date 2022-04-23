@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.job.ResumeMapper" >
+    <resultMap id="baseResult" type="com.human.pojo.job.Resume">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="gender" property="gender" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="resume_url" property="resume_url" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="school" property="school" jdbcType="VARCHAR" />
+        <result column="graduateDate" property="graduateDate" jdbcType="DATE" />
+        <result column="professional" property="professional" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="positionId" property="positionId" jdbcType="INTEGER" />
+        <result column="createDate" property="createDate" jdbcType="DATE" />
+        <result column="updateDate" property="updateDate" jdbcType="DATE" />
+        <association property="job" javaType="com.human.pojo.job.Job">
+            <id column="id" property="id" jdbcType="INTEGER" />
+            <result column="hr_id" property="hr_id" jdbcType="INTEGER" />
+            <result column="p_name" property="p_name" jdbcType="VARCHAR" />
+            <result column="p_key" property="p_key" jdbcType="VARCHAR" />
+            <result column="p_salary" property="p_salary" jdbcType="VARCHAR" />
+            <result column="p_location" property="p_location" jdbcType="VARCHAR" />
+            <result column="p_languages" property="p_languages" jdbcType="VARCHAR" />
+            <result column="p_years" property="p_years" jdbcType="VARCHAR" />
+            <result column="p_tags" property="p_tags" jdbcType="VARCHAR" />
+            <result column="p_jobDetail" property="p_jobDetail" jdbcType="VARCHAR" />
+            <result column="p_jobContent" property="p_jobContent" jdbcType="VARCHAR" />
+            <result column="p_createDate" property="p_createDate" jdbcType="DATE" />
+        </association>
+    </resultMap>
+
+    <!--新增简历-->
+    <insert id="addResume" parameterType="com.human.pojo.job.Resume"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into resume
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="gender != null" >
+                gender,
+            </if>
+            <if test="phone != null" >
+                phone,
+            </if>
+            <if test="email != null" >
+                email,
+            </if>
+            <if test="resume_url != null" >
+                resume_url,
+            </if>
+            <if test="address != null" >
+                address,
+            </if>
+            <if test="school != null" >
+                school,
+            </if>
+            <if test="graduateDate != null" >
+                graduateDate,
+            </if>
+            <if test="professional != null" >
+                professional,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="positionId != null" >
+                positionId,
+            </if>
+            <if test="createDate != null" >
+                createDate,
+            </if>
+            <if test="updateDate != null" >
+                updateDate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null" >
+                #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null" >
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="resume_url != null" >
+                #{resume_url,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="school != null" >
+                #{school,jdbcType=VARCHAR},
+            </if>
+            <if test="graduateDate != null" >
+                #{graduateDate,jdbcType=DATE},
+            </if>
+            <if test="professional != null" >
+                #{professional,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="positionId != null" >
+                #{positionId,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=DATE},
+            </if>
+            <if test="updateDate != null" >
+                #{updateDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+
+    <!--获取总记录数-->
+    <select id="getResumeTotal" resultType="java.lang.Long">
+        select count(*) from resume
+        <where>
+            <if test="resume != null">
+                <if test="resume.name != null and resume.name != ''">
+                    and name like concat('%',#{resume.name},'%')
+                </if>
+                <if test="resume.status != null and resume.status != ''">
+                    and status = #{resume.status}
+                </if>
+                <if test="resume.positionId != null and resume.positionId != ''">
+                    and positionId = #{resume.positionId}
+                </if>
+            </if>
+            <if test="beginDateScope != null">
+                and createDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+            </if>
+        </where>
+    </select>
+
+    <!--分页获取数据-->
+    <select id="getResumePageList" resultMap="baseResult">
+        SELECT r.*,p.*
+        FROM rec_position p, resume r
+        WHERE r.positionId = p.id
+        <if test="resume != null">
+            <if test="resume.name != null and resume.name != ''">
+                and name like concat('%',#{resume.name},'%')
+            </if>
+            <if test="resume.status != null and resume.status != ''">
+                and status = #{resume.status}
+            </if>
+            <if test="resume.positionId != null and resume.positionId != ''">
+                and positionId = #{resume.positionId}
+            </if>
+        </if>
+        <if test="beginDateScope != null">
+            and createDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+        </if>
+        ORDER BY r.id
+        <if test="page != null and size != null">
+            limit #{page},#{size}
+        </if>
+    </select>
+
+    <!--更新-->
+    <update id="updateResume" parameterType="com.human.pojo.job.Resume">
+        update resume
+        <set>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="updateDate != null" >
+                updateDate = #{updateDate,jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

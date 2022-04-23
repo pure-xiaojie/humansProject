@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.msg.MsgContentMapper" >
+    <resultMap id="BaseResultMap" type="com.human.pojo.MsgContent" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="img" property="img" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--公共SQL提取-->
+    <sql id="Base_Column_List" >
+        id, title, message, createDate, img
+    </sql>
+
+    <!--获取总数量-->
+    <select id="getMsgContentTotal" resultType="java.lang.Long">
+        select count(*) from msgcontent
+    </select>
+
+    <!--分页查询-->
+    <select id="getMsgPageList" resultMap="BaseResultMap">
+        select * from msgcontent
+        order by createDate desc
+        <if test="page != null and size != null">
+            limit #{page},#{size}
+        </if>
+    </select>
+
+    <!--根据删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from msgcontent
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--根据id查询-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from msgcontent
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--插入一条公告-->
+    <insert id="insertSelective" parameterType="com.human.pojo.MsgContent" >
+        insert into msgcontent
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="message != null" >
+                message,
+            </if>
+            <if test="createDate != null" >
+                createDate,
+            </if>
+            <if test="img != null" >
+                img,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null" >
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="message != null" >
+                #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="img != null" >
+                #{img,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--更新-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.human.pojo.MsgContent" >
+        update msgcontent
+        <set >
+            <if test="title != null" >
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="message != null" >
+                message = #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null" >
+                img = #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                createDate = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--根据ids 批量删除 -->
+    <delete id="deleteMsgContentByIds">
+        delete from msgcontent where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

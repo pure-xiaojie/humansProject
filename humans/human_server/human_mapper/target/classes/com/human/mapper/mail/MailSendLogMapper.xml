@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.mapper.mail.MailSendLogMapper" >
+    <!--插入邮箱日志-->
+    <insert id="insert" parameterType="com.human.pojo.mail.MailSendLog">
+        insert into mail_send_log (msgId,empId,routeKey,exchange,tryTime,createTime)
+        values (#{msgId},#{empId},#{routeKey},#{exchange},#{tryTime},#{createTime})
+    </insert>
+
+    <!--更新邮箱日志状态-->
+    <update id="updateMailSendLogStatus">
+        update mail_send_log set status = #{status}
+        where msgId = #{msgId}
+    </update>
+
+    <!--查询日志状态为0的邮箱日志-->
+    <select id="getMailSendLogsByStatus" resultType="com.human.pojo.mail.MailSendLog">
+        select * from mail_send_log where status = 0 and tryTime &lt; sysdate()
+    </select>
+
+    <!--更新重试时间-->
+    <update id="updateCountTime">
+        update mail_send_log set count=count+1,updateTime=#{date} where msgId = #{msgId}
+    </update>
+
+    <!--获取总数量-->
+    <select id="getLogTotal" resultType="java.lang.Long">
+        select count(1) from mail_send_log
+    </select>
+
+    <!--分页获取-->
+    <select id="getMailLogListByPageSize" resultType="com.human.pojo.mail.MailSendLog">
+        select * from mail_send_log
+        <if test="page != null and size != null">
+            limit #{page}, #{size}
+        </if>
+    </select>
+
+    <!--根据id删除-->
+    <delete id="deleteLogById" parameterType="java.lang.String">
+        delete from mail_send_log
+        where msgId = #{id}
+    </delete>
+</mapper>
